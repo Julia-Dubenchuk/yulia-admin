@@ -1,10 +1,16 @@
 import { combineReducers } from 'redux';
 import { reducer as reduxFormReducer } from 'redux-form';
+import { connectRouter } from 'connected-react-router';
 import authorization from './authorization';
-import getUsers from './getUsers';
+import profiles from './profiles';
+import userId from './userId';
+import profile from './profile';
 
-export default combineReducers({
+export default (history) => combineReducers({
     authorization,
-    getUsers,
+    router: connectRouter(history),
+    profiles,
+    profile,
+    userId,
     form: reduxFormReducer,
 });

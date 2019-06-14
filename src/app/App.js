@@ -1,5 +1,5 @@
 import React from 'react';
-import Router from './Router';
+import Router from './RouterAdmin';
 import ErrorBoundry from '../components/ErrorBoundry';
 
 import './App.css';
