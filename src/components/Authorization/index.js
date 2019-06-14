@@ -54,11 +54,10 @@ const useStyles = makeStyles(theme => ({
   );
 
 let Authorization = ({ handleSubmit }) => {
-  console.log('formprops', handleSubmit);
     const classes = useStyles();
     return (
         <Container component="main" maxWidth="xs">
-      <CssBaseline />
+        <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           Sign in
