@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { connect } from 'react-redux'
+import { makeStyles } from '@material-ui/core/styles';
 import { Field, reduxForm } from 'redux-form';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -16,7 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { queryUpdateProfiles } from '../../redux/actions';
 
-const styles = {
+const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -48,12 +47,9 @@ const styles = {
     button: {
         margin: 12,
       },
-  };
-class UserForm extends Component {
-
-    render() {
-        const { handleSubmit, classes } = this.props;
-        console.log('handSub', handleSubmit);
+  }));
+let UserForm = ({ handleSubmit }) => {
+    const classes = useStyles();
         return (
             <form onSubmit={handleSubmit} className={classes.root}>
                 <div  className={classes.itemInput}>
@@ -130,16 +126,16 @@ class UserForm extends Component {
                 </div>
             </form>
         );
-    }
 };  
 
 UserForm = reduxForm({
     form: 'userForm',
     onSubmit: queryUpdateProfiles,
 })(UserForm);
+UserForm = connect(
+    ({userId, profiles: { items }}) => ({
+      initialValues: { ...items.filter(item => item.id === userId)[0] }
+    })
+  )(UserForm);
 
-const mapStateToProps = ({userId, profiles: { items }}) => ({
-    initialValues: { ...items.filter(item => item.id === userId)[0] },
-});
-
-export default connect(mapStateToProps)(withStyles(styles)(UserForm));
+export default UserForm;

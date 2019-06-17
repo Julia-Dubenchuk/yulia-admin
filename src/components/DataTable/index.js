@@ -29,7 +29,7 @@ const DataTable = () => {
     const isLoader = useSelector(store => store.profiles.isLoader);
     const dispatch = useDispatch();
     useEffect(() => {
-      dispatch(queryGetProfiles());
+      dispatch(queryGetProfiles(JSON.parse(localStorage.getItem('auth'))));
     }, []);
     return (
       <Paper>
