@@ -8,19 +8,28 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Slide from '@material-ui/core/Slide';
 import UserForm from '../UserForm';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { isOpen } from '../../redux/actions';
 
-const styles = {
+  const useStyles = makeStyles(() => ({
     appBar: {
       position: 'relative',
     },
+  }));
+
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+
+const DialogUser = () => {
+  const classes = useStyles();
+  const open = useSelector(store => store.isOpen);
+  const dispatch = useDispatch();
+  function handleClose() {
+    dispatch(isOpen());
   };
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-  }
-
-const DialogUser = ({ open, classes, handleClose }) => {
 
     return (
         <Dialog
@@ -31,13 +40,13 @@ const DialogUser = ({ open, classes, handleClose }) => {
         >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton color="inherit" onClick={handleClose()} aria-label="Close">
+              <IconButton color="inherit" onClick={handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" color="inherit">
                 Sound
               </Typography>
-              <Button color="inherit" onClick={handleClose()}>
+              <Button color="inherit" onClick={handleClose}>
                 save
               </Button>
             </Toolbar>
@@ -47,4 +56,4 @@ const DialogUser = ({ open, classes, handleClose }) => {
     )
 };
 
-export default withStyles(styles)(DialogUser);
+export default DialogUser;

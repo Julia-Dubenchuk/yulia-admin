@@ -31,9 +31,8 @@ export const updateProfiles = (item) => ({
   payload: item,
 });
 
-export const isOpen = (payload) => ({
+export const isOpen = () => ({
   type: OPEN,
-  payload,
 })
 
 
@@ -49,6 +48,7 @@ export function getToken(formData, dispatch) {
               localStorage.setItem('auth', JSON.stringify(res.data.token));
               dispatch(authAdmin(res.data.token));
       }})
+      .then(() => dispatch(queryGetProfiles()))
       .then(() => history.push('/data-table'))
       .catch((err) => console.log('error', err));
 }

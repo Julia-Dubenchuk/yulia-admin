@@ -1,66 +1,36 @@
-import React, { Component } from 'react';
-import { queryGetProfiles, getUserId } from '../../redux/actions';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import React, { useEffect } from 'react';
+import { queryGetProfiles } from '../../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import Edit from '@material-ui/icons/Edit';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import Typography from '@material-ui/core/Typography';
-import UserForm from '../UserForm';
-import DataItem from '../DataItem';
+import DataItem from '../DataItem/';
+import DialogUser from '../DialogUser';
 import Loader from '../Loader';
 
-const styles = {
+const useStyles = makeStyles(theme => ({
   root: {
-        width: '100%',
-        overflowX: 'auto',
-      },
+    width: '100%',
+    marginTop: theme.spacing(3),
+    overflowX: 'auto',
+  },
   table: {
     minWidth: 650,
   },
-  appBar: {
-    position: 'relative',
-  },
-};
+}));
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
-class DataTable extends Component {
-  state = {
-    open: false,
-  };
-
-  componentDidMount() {
-    const { queryGetProfiles } = this.props;
-    queryGetProfiles();
-  }
-
-  handleClickOpen = (id) => {
-    const { getUserId } = this.props;
-    this.setState({ open: true });
-    getUserId(id);
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  render() {
-    const { profiles, classes } = this.props;
-    const { open } = this.state;
+const DataTable = () => {
+    const classes = useStyles();
+    const profiles = useSelector(store => store.profiles.items);
+    const isLoader = useSelector(store => store.profiles.isLoader);
+    const dispatch = useDispatch();
+    useEffect(() => {
+      dispatch(queryGetProfiles());
+    }, []);
     return (
       <Paper>
         <Table className={classes.root}>
@@ -78,50 +48,24 @@ class DataTable extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {profiles.map(person => (
-              <DataItem key={person.id} data={person} handleClickOpen={() => this.handleClickOpen}/>
-            ))}
-            </TableBody>
+            {
+              isLoader ? 
+              <TableRow>
+                <TableCell colSpan={9}>
+                  <Loader />
+                </TableCell>
+              </TableRow> :  
+              <> 
+                {profiles.map(person => (
+                      <DataItem key={person.id} data={person} />
+                    ))}
+              </>
+            }
+          </TableBody>
         </Table>
-        <Dialog
-          fullScreen
-          open={open}
-          onClose={this.handleClose}
-          TransitionComponent={Transition}
-        >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.flex}>
-                Sound
-              </Typography>
-              <Button color="inherit" onClick={this.handleClose}>
-                save
-              </Button>
-            </Toolbar>
-          </AppBar>
-          <UserForm />
-        </Dialog>
+        <DialogUser />
       </Paper>
     )
-  }
 }
 
-DataTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  profiles: state.profiles.items,
-  isLoader: state.isLoader,
-  userId: state.userId,
-});
-
-const mapDispatchToProps = {
-  queryGetProfiles,
-  getUserId,
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(DataTable));
+export default DataTable;
