@@ -3,7 +3,6 @@ import axios from 'axios';
 import history from '../../history';
 
 const API = 'https://test-bo.cosmocareportal.com/api/v1';
-const localToken = JSON.parse(localStorage.getItem('auth'));
 
 export const authAdmin = (item) => {
   return {
@@ -48,27 +47,29 @@ export function getToken(formData, dispatch) {
               localStorage.setItem('auth', JSON.stringify(res.data.token));
               dispatch(authAdmin(res.data.token));
       }})
-      .then(() => dispatch(queryGetProfiles()))
       .then(() => history.push('/data-table'))
       .catch((err) => console.log('error', err));
 }
 
-export const queryGetProfiles = () => dispatch => {
+export const queryGetProfiles = token => dispatch => {
   dispatch(requestProfiles());
-  axios.get(`${API}/vcprofiles/`, { headers: { 'Authorization': `Token ${localToken}` } })
-    .then(response => response.data.results)
-    .then(results => dispatch(receiveProfiles(results)))
+
+  axios.get(`${API}/vcprofiles/`, { headers: { 'Authorization': `Token ${token}` } })
+    .then(response => {
+      console.log('resp', response);
+      dispatch(receiveProfiles(response.data.results))})
     .catch((err) => console.log('error', err));
 };
 
 export function queryUpdateProfiles(formData, dispatch) {
+  const localToken = JSON.parse(localStorage.getItem('auth'));
   let data = new FormData();
   Object.keys(formData).forEach((key) => {
     data.set(key, formData[key])
   });
   axios.put(`${API}/vcprofiles/${formData.id}/`, data, { headers: { 'Authorization': `Token ${localToken}` } })
     .then((res) => dispatch(updateProfiles(res.data)))
-    .then(() => dispatch(queryGetProfiles()))
+    .then(() => dispatch(queryGetProfiles(localToken)))
     .catch((err) => console.log('error', err));
 }
 

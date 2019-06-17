@@ -68,7 +68,6 @@ let Authorization = ({ handleSubmit }) => {
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
             component={renderTextField}
             autoFocus
           />
@@ -81,7 +80,6 @@ let Authorization = ({ handleSubmit }) => {
             component={renderTextField}
             type="password"
             id="password"
-            autoComplete="current-password"
           />
           <Button
             type="submit"
