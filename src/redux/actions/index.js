@@ -1,4 +1,4 @@
-import { AUTH_SIGN_IN, REQUEST_PROFILES, RECEIVE_PROFILES, GET_USER_ID, UPDATE_PROFILES } from '../../constants';
+import { AUTH_SIGN_IN, REQUEST_PROFILES, RECEIVE_PROFILES, GET_USER_ID, UPDATE_PROFILES, OPEN } from '../../constants';
 import axios from 'axios';
 import history from '../../history';
 
@@ -30,6 +30,11 @@ export const updateProfiles = (item) => ({
   type: UPDATE_PROFILES,
   payload: item,
 });
+
+export const isOpen = (payload) => ({
+  type: OPEN,
+  payload,
+})
 
 
 

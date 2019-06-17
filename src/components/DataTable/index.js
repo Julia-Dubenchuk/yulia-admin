@@ -19,6 +19,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 import UserForm from '../UserForm';
+import DataItem from '../DataItem';
+import Loader from '../Loader';
 
 const styles = {
   root: {
@@ -57,7 +59,7 @@ class DataTable extends Component {
   };
 
   render() {
-    const { profiles, classes, userId } = this.props;
+    const { profiles, classes } = this.props;
     const { open } = this.state;
     return (
       <Paper>
@@ -77,25 +79,9 @@ class DataTable extends Component {
           </TableHead>
           <TableBody>
             {profiles.map(person => (
-              <TableRow key={person.id}>
-                <TableCell component="th" scope="row">
-                  {person.user.first_name}
-                </TableCell>
-                <TableCell align="right">{person.user.last_name}</TableCell>
-                <TableCell align="right">{person.user.second_last_name}</TableCell>
-                <TableCell align="right">{person.user.date_joined}</TableCell>
-                <TableCell align="right">{person.age}</TableCell>
-                <TableCell align="right">{person.city}</TableCell>
-                <TableCell align="right">{person.birthday}</TableCell>
-                <TableCell align="right">{person.gender}</TableCell>
-                <TableCell align="right">
-                  <Button variant="outlined" color="primary" onClick={() => this.handleClickOpen(person.id)}>
-                    <Edit />
-                  </Button>
-                </TableCell>
-              </TableRow>
+              <DataItem key={person.id} data={person} handleClickOpen={() => this.handleClickOpen}/>
             ))}
-          </TableBody>
+            </TableBody>
         </Table>
         <Dialog
           fullScreen
@@ -129,6 +115,7 @@ DataTable.propTypes = {
 
 const mapStateToProps = (state) => ({
   profiles: state.profiles.items,
+  isLoader: state.isLoader,
   userId: state.userId,
 });
 
