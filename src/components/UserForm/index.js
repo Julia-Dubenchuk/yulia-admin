@@ -13,10 +13,13 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import RenderTextField from './components/RenderTextField';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import { queryUpdateProfiles } from '../../redux/actions';
 
 const styles = {
     root: {
+        display: 'flex',
+        flexWrap: 'wrap',
         margin: '40px 24px',
         },
     table: {
@@ -25,6 +28,26 @@ const styles = {
     appBar: {
       position: 'relative',
     },
+    itemInput: {
+        padding: 12,
+        width: '50%',
+        boxSizing: 'border-box',
+    },
+    inputUser: {
+        width: '100%',
+        maxWidth: 450,
+        height: 40,
+        boxShadow: '0 0 20px 1px #ecedee',
+        borderRadius: 20,
+        backgroundColor: '#ffffff',
+        paddingLeft: 24,
+        color: '#7e7e7e',
+        fontSize: 16,
+        fontWeight: 400,
+    },
+    button: {
+        margin: 12,
+      },
   };
 class UserForm extends Component {
 
@@ -33,69 +56,77 @@ class UserForm extends Component {
         console.log('handSub', handleSubmit);
         return (
             <form onSubmit={handleSubmit} className={classes.root}>
-                <div>
+                <div  className={classes.itemInput}>
                     <Field 
                         name="user.first_name"
                         component="input"
-                        label="First Name"  
+                        label="First Name"
+                        className={classes.inputUser}  
                     />
                 </div>
-                <div>
+                <div  className={classes.itemInput}>
                     <Field 
                         name="user.last_name"
                         component="input"
-                        label="Last Name"    
+                        label="Last Name"
+                        className={classes.inputUser}    
                     />
                 </div>
-                <div>
+                <div  className={classes.itemInput}>
                     <Field 
                         name="user.second_last_name"
                         component="input"
-                        label="Second Last Name"    
+                        label="Second Last Name"
+                        className={classes.inputUser}    
                     />
                 </div>
-                <div>
+                <div  className={classes.itemInput}>
                     <Field 
                         name="user.date_joined"
                         component="input"
-                        label="Data Joined"    
+                        label="Data Joined"
+                        className={classes.inputUser}    
                     />
                 </div>
-                <div>
+                <div  className={classes.itemInput}>
                     <Field 
                         name="age"
                         component="input"
-                        label="Age"    
+                        label="Age"
+                        className={classes.inputUser}    
                     />
                 </div>
-                <div>
+                <div className={classes.itemInput} >
                     <Field 
                         name="city"
                         component="input"
-                        label="City"    
+                        label="City"
+                        className={classes.inputUser}   
                     />
                 </div>
-                <div>
+                <div  className={classes.itemInput}>
                     <Field 
                         name="birthday"
                         component="input"
-                        label="Birthday"    
+                        label="Birthday"
+                        className={classes.inputUser}    
                     />
                 </div>
-                <div>
+                <div className={classes.itemInput} >
                     <Field 
                         name="gender"
                         component="input"
-                        label="Gender"    
+                        label="Gender"
+                        className={classes.inputUser}   
                     />
                 </div>
                 <div>
-                    <button type="submit">
+                    <Button variant="contained" color="primary" type="submit" className={classes.button}>
                         Submit
-                    </button>
-                    <button type="button">
+                    </Button>
+                    <Button variant="contained" type="button" className={classes.button}>
                         Undo Changes
-                    </button>
+                    </Button>
                 </div>
             </form>
         );

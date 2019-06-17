@@ -1,4 +1,4 @@
-import { AUTH_SIGN_IN, REQUEST_PROFILES, RECEIVE_PROFILES, GET_USER_ID, UPDATE_PROFILES } from '../../constants';
+import { AUTH_SIGN_IN, REQUEST_PROFILES, RECEIVE_PROFILES, GET_USER_ID, UPDATE_PROFILES, OPEN } from '../../constants';
 import axios from 'axios';
 import history from '../../history';
 
@@ -31,6 +31,10 @@ export const updateProfiles = (item) => ({
   payload: item,
 });
 
+export const isOpen = () => ({
+  type: OPEN,
+})
+
 
 
 export function getToken(formData, dispatch) {
@@ -44,6 +48,7 @@ export function getToken(formData, dispatch) {
               localStorage.setItem('auth', JSON.stringify(res.data.token));
               dispatch(authAdmin(res.data.token));
       }})
+      .then(() => dispatch(queryGetProfiles()))
       .then(() => history.push('/data-table'))
       .catch((err) => console.log('error', err));
 }

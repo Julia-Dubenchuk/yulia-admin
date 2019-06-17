@@ -4,3 +4,4 @@ export const REQUEST_PROFILES = 'REQUEST_PROFILES';
 export const RECEIVE_PROFILES = 'RECEIVE_PROFILES';
 export const GET_USER_ID = 'GET_USER_ID';
 export const UPDATE_PROFILES = 'UPDATE_PROFILES';
+export const OPEN = 'OPEN';

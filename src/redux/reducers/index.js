@@ -5,6 +5,7 @@ import authorization from './authorization';
 import profiles from './profiles';
 import userId from './userId';
 import profile from './profile';
+import isOpen from './isOpen';
 
 export default (history) => combineReducers({
     authorization,
@@ -12,5 +13,6 @@ export default (history) => combineReducers({
     profiles,
     profile,
     userId,
+    isOpen,
     form: reduxFormReducer,
 });

@@ -1,7 +1,7 @@
 import { REQUEST_PROFILES, RECEIVE_PROFILES } from '../../constants';
 
 const initialState = {
-    isFetching: false,
+    isLoader: false,
     items: []
   };
 
@@ -10,12 +10,12 @@ export default (state = initialState, { type, payload }) => {
         case REQUEST_PROFILES:
             return {
                 ...state,
-                isFetching: true,
+                isLoader: true,
               };
         case RECEIVE_PROFILES:
             return {
                 ...state,
-                isFetching: false,
+                isLoader: false,
                 items: payload,
             };
         default:
