@@ -1,4 +1,12 @@
-import { AUTH_SIGN_IN, REQUEST_PROFILES, RECEIVE_PROFILES, GET_USER_ID, UPDATE_PROFILES, OPEN } from '../../constants';
+import { 
+  AUTH_SIGN_IN, 
+  REQUEST_PROFILES, 
+  RECEIVE_PROFILES, 
+  GET_USER_ID, 
+  UPDATE_PROFILES,
+  UPDATE_PROFILES_ERROR,
+  UPDATE_PROFILES_CLOSE, 
+  OPEN } from '../../constants';
 import axios from 'axios';
 import history from '../../history';
 
@@ -30,6 +38,14 @@ export const updateProfiles = (item) => ({
   payload: item,
 });
 
+export const updateProfilesError = () => ({
+  type: UPDATE_PROFILES_ERROR,
+});
+
+export const updateProfilesClose = () => ({
+  type: UPDATE_PROFILES_CLOSE,
+});
+
 export const isOpen = () => ({
   type: OPEN,
 })
@@ -56,7 +72,6 @@ export const queryGetProfiles = token => dispatch => {
 
   axios.get(`${API}/vcprofiles/`, { headers: { 'Authorization': `Token ${token}` } })
     .then(response => {
-      console.log('resp', response);
       dispatch(receiveProfiles(response.data.results))})
     .catch((err) => console.log('error', err));
 };
@@ -70,6 +85,6 @@ export function queryUpdateProfiles(formData, dispatch) {
   axios.put(`${API}/vcprofiles/${formData.id}/`, data, { headers: { 'Authorization': `Token ${localToken}` } })
     .then((res) => dispatch(updateProfiles(res.data)))
     .then(() => dispatch(queryGetProfiles(localToken)))
-    .catch((err) => console.log('error', err));
+    .catch(() => dispatch(updateProfilesError()));
 }
 
