@@ -5,13 +5,14 @@ import Button from '@material-ui/core/Button';
 import Edit from '@material-ui/icons/Edit';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
-import { isOpen, getUserId } from '../../redux/actions';
+import { getUserId } from '../../redux/actions';
+import history from '../../history';
 
 const DataItem = ({ data }) => {
   const dispatch = useDispatch();
   const handleClickOpen = (id) => {
-    dispatch(isOpen());
     dispatch(getUserId(id));
+    history.push(`/data-table/${id}`);
   };
     return (
       <TableRow>
