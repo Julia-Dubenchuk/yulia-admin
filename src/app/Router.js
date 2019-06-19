@@ -10,12 +10,11 @@ import PageNotFound from '../components/PageNotFound';
 
 const Router = () => {
     const authorization = useSelector(state => state.authorization);
-    const profile = useSelector(state => state.profile.items);
     if(authorization) {
         return (
             <ConnectedRouter history={history}>
                 <Switch>
-                    <Route exact path='/data-table' component={DataTable} />
+                    <Route exact path={['/', '/data-table']} component={DataTable} />
                     <Route exact path='/data-table/:id' render={({ match }) => 
                        <DialogUser userId={match.params.id} />
                     }/>
