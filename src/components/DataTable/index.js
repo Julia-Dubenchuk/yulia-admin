@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { queryGetProfiles } from '../../redux/actions';
+import { queryGetProfiles, getCities } from '../../redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -9,10 +9,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DataItem from '../DataItem/';
-import DialogUser from '../DialogUser';
 import Loader from '../Loader';
+import DialogLogOut from '../DialogLogOut';
 
 const useStyles = makeStyles(theme => ({
+  wrapperTable: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   root: {
     width: '100%',
     marginTop: theme.spacing(3),
@@ -20,6 +24,9 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
     minWidth: 650,
+  },
+  dialogButton: {
+    alignSelf: 'flex-start',
   },
 }));
 
@@ -30,41 +37,45 @@ const DataTable = () => {
     const dispatch = useDispatch();
     useEffect(() => {
       dispatch(queryGetProfiles(JSON.parse(localStorage.getItem('auth'))));
+      dispatch(getCities(JSON.parse(localStorage.getItem('auth'))));
     }, []);
     return (
-      <Paper>
-        <Table className={classes.root}>
-          <TableHead>
-            <TableRow>
-              <TableCell>first_name</TableCell>
-              <TableCell align="right">last_name</TableCell>
-              <TableCell align="right">second_last_name</TableCell>
-              <TableCell align="right">date_joined</TableCell>
-              <TableCell align="right">age</TableCell>
-              <TableCell align="right">city</TableCell>
-              <TableCell align="right">birthday</TableCell>
-              <TableCell align="right">gender</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              isLoader ? 
+      <div className={classes.wrapperTable}>
+        <Paper>
+          <Table className={classes.root}>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={9}>
-                  <Loader />
-                </TableCell>
-              </TableRow> :  
-              <> 
-                {profiles.map(person => (
-                      <DataItem key={person.id} data={person} />
-                    ))}
-              </>
-            }
-          </TableBody>
-        </Table>
-        <DialogUser />
-      </Paper>
+                <TableCell>first_name</TableCell>
+                <TableCell align="right">last_name</TableCell>
+                <TableCell align="right">second_last_name</TableCell>
+                <TableCell align="right">date_joined</TableCell>
+                <TableCell align="right">age</TableCell>
+                <TableCell align="right">city</TableCell>
+                <TableCell align="right">birthday</TableCell>
+                <TableCell align="right">gender</TableCell>
+                <TableCell align="right">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                isLoader ? 
+                <TableRow>
+                  <TableCell colSpan={9}>
+                    <Loader />
+                  </TableCell>
+                </TableRow> :  
+                <> 
+                  {profiles.map(person => (
+                        <DataItem key={person.id} data={person} />
+                  ))}
+                </>
+              }
+            </TableBody>
+          </Table>
+          {/* <DialogUser /> */}
+        </Paper>
+        <DialogLogOut />
+      </div>
     )
 }
 

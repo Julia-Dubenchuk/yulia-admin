@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, reduxForm } from 'redux-form';
@@ -12,6 +12,8 @@ import { queryUpdateProfiles } from '../../redux/actions';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Avatar from '@material-ui/core/Avatar';
+import Loader from '../Loader';
 import { updateProfilesClose } from '../../redux/actions';
 
 const useStyles = makeStyles(theme => ({
@@ -25,6 +27,12 @@ const useStyles = makeStyles(theme => ({
     },
     appBar: {
       position: 'relative',
+    },
+    avatar: {
+        margin: '40px 0 0 36px',
+        width: 100,
+        fontSize: 16,
+        height: 100,
     },
     itemInput: {
         padding: 12,
@@ -96,7 +104,6 @@ const useStyles = makeStyles(theme => ({
     const classes = useStyles1();
     const { className, message, onClose, variant, ...other } = props;
     const Icon = variantIcon[variant];
-  
     return (
       <SnackbarContent
         className={clsx(classes[variant], className)}
@@ -117,15 +124,25 @@ const useStyles = makeStyles(theme => ({
     );
   }
 
-let UserForm = ({ handleSubmit }) => {
+let UserForm = ({ handleSubmit, initialValues }) => {
     const classes = useStyles();
     const profile = useSelector(state => state.profile);
+    const cities = useSelector(state => state.cities);
     const dispatch = useDispatch();
     function handleClose(event, reason) {
         dispatch(updateProfilesClose());
       }
+      useEffect(() => {
+       
+      }, []);
+      if(!initialValues) {
+        return <Loader />
+      }
         return (
             <>
+                <div>
+                    <Avatar className={classes.avatar}>{initialValues.user.first_name}</Avatar>
+                </div>
                 <form onSubmit={handleSubmit} className={classes.root}>
                     <div  className={classes.itemInput}>
                         <label className={classes.labelFont}>First Name</label>
@@ -179,12 +196,14 @@ let UserForm = ({ handleSubmit }) => {
                     </div>
                     <div className={classes.itemInput} >
                         <label className={classes.labelFont}>City</label>
-                        <Field 
-                            name="city"
-                            component="input"
-                            label="City"
-                            className={classes.inputUser}   
-                        />
+                        <Field name="city" component="select" className={classes.inputUser}  >
+                            <option value="">Select a city...</option>
+                            {cities.map(item => (
+                            <option value={item.name} key={item.id}>
+                                {item.name}
+                            </option>
+                            ))}
+                        </Field>
                     </div>
                     <div  className={classes.itemInput}>
                         <label className={classes.labelFont}>Birthday</label>
@@ -211,7 +230,7 @@ let UserForm = ({ handleSubmit }) => {
                     </div>
                     <div>
                         <Button variant="contained" color="primary" type="submit" className={classes.button}>
-                            Submit
+                            Update
                         </Button>
                     </div>
                 </form>
@@ -239,9 +258,9 @@ UserForm = reduxForm({
     onSubmit: queryUpdateProfiles,
 })(UserForm);
 UserForm = connect(
-    ({userId, profiles: { items }}) => ({
-      initialValues: { ...items.filter(item => item.id === userId)[0] }
-    })
-  )(UserForm);
+  ({ profile }) => ({
+    initialValues: profile.items,
+  })
+)(UserForm);
 
 export default UserForm;

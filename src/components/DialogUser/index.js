@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,7 +9,9 @@ import Slide from '@material-ui/core/Slide';
 import UserForm from '../UserForm';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { isOpen } from '../../redux/actions';
+import { isOpen, queryGetProfilesId } from '../../redux/actions';
+import history from '../../history';
+import PageNotFound from '../PageNotFound';
 
   const useStyles = makeStyles(() => ({
     appBar: {
@@ -22,13 +24,25 @@ import { isOpen } from '../../redux/actions';
   });
 
 
-const DialogUser = () => {
+const DialogUser = ({ userId }) => {
   const classes = useStyles();
   const open = useSelector(store => store.isOpen);
+  const isError = useSelector(store => store.profile.isError);
   const dispatch = useDispatch();
   function handleClose() {
-    dispatch(isOpen());
+    dispatch(isOpen(false));
+    history.push('/data-table');
+
   };
+
+  useEffect(() => {
+    dispatch(isOpen(true));
+    dispatch(queryGetProfilesId(userId));
+  }, []);
+
+  if(isError) {
+    return <PageNotFound />
+  } 
 
     return (
         <Dialog
