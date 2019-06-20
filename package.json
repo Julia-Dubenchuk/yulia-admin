@@ -17,6 +17,7 @@
     "react-router-redux": "^4.0.8",
     "react-scripts": "3.0.1",
     "redux": "^4.0.1",
+    "redux-axios-middleware": "^4.0.0",
     "redux-form": "^8.2.3",
     "redux-thunk": "^2.3.0"
   },
@@ -40,8 +41,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "redux-axios-middleware": "^4.0.0"
   }
 }

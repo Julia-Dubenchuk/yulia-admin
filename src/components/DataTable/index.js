@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { queryGetProfiles, getCities } from '../../redux/actions';
+import { requestProfiles } from '../../redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import DataItem from '../DataItem/';
 import Loader from '../Loader';
 import DialogLogOut from '../DialogLogOut';
+import SnackarNotification from '../SnackbarNotification';
 
 const useStyles = makeStyles(theme => ({
   wrapperTable: {
@@ -36,8 +37,7 @@ const DataTable = () => {
     const isLoader = useSelector(store => store.profiles.isLoader);
     const dispatch = useDispatch();
     useEffect(() => {
-      dispatch(queryGetProfiles(JSON.parse(localStorage.getItem('auth'))));
-      dispatch(getCities(JSON.parse(localStorage.getItem('auth'))));
+      dispatch(requestProfiles(JSON.parse(localStorage.getItem('auth'))));
     }, []);
     return (
       <div className={classes.wrapperTable}>
@@ -72,9 +72,9 @@ const DataTable = () => {
               }
             </TableBody>
           </Table>
-          {/* <DialogUser /> */}
         </Paper>
         <DialogLogOut />
+        <SnackarNotification />
       </div>
     )
 }

@@ -7,6 +7,7 @@ import userId from './userId';
 import profile from './profile';
 import isOpen from './isOpen';
 import cities from './cities';
+import showNotification from './showNotification';
 
 export default (history) => combineReducers({
     authorization,
@@ -16,5 +17,6 @@ export default (history) => combineReducers({
     userId,
     isOpen,
     cities,
+    showNotification,
     form: reduxFormReducer,
 });
