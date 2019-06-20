@@ -1,19 +1,54 @@
 import { 
-  AUTH_SIGN_IN, 
+  AUTH_SIGN_IN,
+  AUTH_SIGN_IN_SUCCESS, 
   REQUEST_PROFILES, 
-  RECEIVE_PROFILES, 
+  RECEIVE_PROFILES,
   GET_USER_ID, 
-  UPDATE_PROFILES,
-  UPDATE_PROFILES_ERROR,
-  UPDATE_PROFILES_CLOSE,
+  UPDATE_PROFILE,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATE_PROFILE_ERROR,
+  UPDATE_PROFILE_CLOSE,
+  REQUEST_CITIES,
   RECEIVE_CITIES,
+  REQUEST_PROFILES_ID,
   RECEIVE_PROFILES_ID,
   RECEIVE_PROFILES_ID_ERROR, 
-  OPEN } from '../../constants';
+  OPEN,
+  OPEN_NOTIFICATION_SUCCESS,
+  OPEN_NOTIFICATION_ERROR
+ } from '../../constants';
 import axios from 'axios';
 import history from '../../history';
 
 const API = 'https://test-bo.cosmocareportal.com/api/v1';
+
+// export const authAdmin = (formData) => ({
+//   type: AUTH_SIGN_IN,
+//   payload: {
+//     request:{
+//       url:`${API}/auth/login/`,
+//       data: formData,
+//       method: 'post',
+//       headers: {
+//         'Content-Type': 'application/x-www-form-urlencoded',
+//       }
+//     },
+//     options: {
+//       onSuccess({ getState, dispatch, response }) {
+//         console.log('response');
+//         // if (response.data.is_staff) {
+//           localStorage.setItem('auth', JSON.stringify(response.data.token));
+//           dispatch({type: AUTH_SIGN_IN_SUCCESS, payload: response.data.token});
+//         // }
+//         history.push('/data-table');
+//       },
+//       onError({ getState, dispatch }) { 
+//         console.log('errrrrr');    
+//         dispatch({ type: OPEN_NOTIFICATION_ERROR, payload: 'Error Authorization' });
+//      }, 
+//     },
+//   }
+// });
 
 export const authAdmin = (item) => {
   return {
@@ -21,52 +56,6 @@ export const authAdmin = (item) => {
     payload: item,
   }
 };
-
-export const requestProfiles = () => ({
-  type: REQUEST_PROFILES,
-});
-
-export const receiveProfiles = (items) => ({
-  type: RECEIVE_PROFILES,
-  payload: items,
-});
-
-export const receiveProfilesId = (items) => ({
-  type: RECEIVE_PROFILES_ID,
-  payload: items,
-});
-
-export const receiveProfilesIdError = () => ({
-  type: RECEIVE_PROFILES_ID_ERROR,
-});
-
-export const getUserId = (id) => ({
-  type: GET_USER_ID,
-  id,
-});
-
-export const updateProfiles = (item) => ({
-  type: UPDATE_PROFILES,
-  payload: item,
-});
-
-export const updateProfilesError = () => ({
-  type: UPDATE_PROFILES_ERROR,
-});
-
-export const updateProfilesClose = () => ({
-  type: UPDATE_PROFILES_CLOSE,
-});
-
-export const receiveCities = (items) => ({
-  type: RECEIVE_CITIES,
-  payload: items,
-});
-
-export const isOpen = (item) => ({
-  type: OPEN,
-  payload: item,
-});
 
 export function getToken(formData, dispatch) {
   let data = new FormData();
@@ -83,28 +72,91 @@ export function getToken(formData, dispatch) {
       .catch((err) => console.log('error', err));
 }
 
-export const getCities = (token) => dispatch => {
-  axios.get(`${API}/geo/countries/`, { headers: { 'Authorization': `Token ${token}` } })
-    .then(response => dispatch(receiveCities(response.data.results)))
-    .catch((err) => console.log('error', err));
-};
+export const requestProfiles = (token) => ({
+  type: REQUEST_PROFILES,
+  payload: {
+    request:{
+      url:`/vcprofiles/`,
+      method: 'get',
+      headers: {
+        'Authorization': `Token ${token}`,
+      }
+    },
+    options: {
+      onSuccess({ getState, dispatch, response }) {
+        dispatch({ type: RECEIVE_PROFILES, payload: response.data.results });
+      },
+      onError({ getState, dispatch }) {     
+        dispatch({ type: OPEN_NOTIFICATION_ERROR, payload: 'This is error network! You can\'t get profiles.' });
+     }, 
+    },
+  }
+});
 
-export const queryGetProfiles = token => dispatch => {
-  dispatch(requestProfiles());
+const localToken = JSON.parse(localStorage.getItem('auth'));
+export const requestProfilesId = (id) => ({
+  type: REQUEST_PROFILES_ID,
+  payload: {
+    request:{
+      url:`/vcprofiles/${id}/`,
+      method: 'get',
+      headers: {
+        'Authorization': `Token ${localToken}`,
+      }
+    },
+    options: {
+      onSuccess({ getState, dispatch, response }) {
+        response.status === 200 && dispatch({ type: RECEIVE_PROFILES_ID, payload: response.data });
+      },
+      onError({ getState, dispatch }) {     
+        dispatch({type: RECEIVE_PROFILES_ID_ERROR});
+     }, 
+    },
+  }
+});
 
-  axios.get(`${API}/vcprofiles/`, { headers: { 'Authorization': `Token ${token}` } })
-    .then(response => {
-      dispatch(receiveProfiles(response.data.results))})
-    .catch((err) => console.log('error', err));
-};
+export const getUserId = (id) => ({
+  type: GET_USER_ID,
+  id,
+});
 
-export const queryGetProfilesId = id => dispatch => {
-  const localToken = JSON.parse(localStorage.getItem('auth'));
-  axios.get(`${API}/vcprofiles/${id}/`, { headers: { 'Authorization': `Token ${localToken}` } })
-    .then(response => {
-      response.status === 200 && dispatch(receiveProfilesId(response.data))})
-    .catch((err) => dispatch(receiveProfilesIdError()));
-};
+export const updateProfiles = (item) => ({
+  type: UPDATE_PROFILE,
+  payload: item,
+});
+
+// export const updateProfilesError = () => ({
+//   type: UPDATE_PROFILES_ERROR,
+// });
+
+// export const updateProfilesClose = () => ({
+//   type: UPDATE_PROFILES_CLOSE,
+// });
+
+// export function updateProfile(formData) {
+//   return {
+//   type: UPDATE_PROFILE,
+//   body: formData,
+//   payload: {
+//     request:{
+//       url:`/vcprofiles/${formData.id}/`,
+//       method: 'patch',
+//       headers: {
+//         'Authorization': `Token ${localToken}`,
+//       }
+//     },
+//     options: {
+//       onSuccess({ getState, dispatch, response }) {
+//         console.log('updateNew', response);
+//         dispatch({type: UPDATE_PROFILE_SUCCESS, payload: response.data});
+//         dispatch({type: OPEN_NOTIFICATION_SUCCESS, message: 'This is success update!'});
+//       },
+//       onError({ getState, dispatch }) {     
+//         dispatch({type: OPEN_NOTIFICATION_ERROR, message: 'This is error update!'});
+//      }, 
+//     },
+//   }}
+// };
 
 export function queryUpdateProfiles(formData, dispatch) {
   const localToken = JSON.parse(localStorage.getItem('auth'));
@@ -113,7 +165,35 @@ export function queryUpdateProfiles(formData, dispatch) {
     data.set(key, formData[key])
   });
   axios.patch(`${API}/vcprofiles/${formData.id}/`, data, { headers: { 'Authorization': `Token ${localToken}` } })
-    .then((res) => dispatch(updateProfiles(res.data)))
-    .catch(() => dispatch(updateProfilesError()));
+    .then((res) => {
+      dispatch(updateProfiles(res.data));
+      dispatch({type: OPEN_NOTIFICATION_SUCCESS, message: 'This is success update!'});
+    })
+    .catch(() => dispatch({type: OPEN_NOTIFICATION_ERROR, message: 'This is error update!'}));
 }
 
+export const isOpen = (item) => ({
+  type: OPEN,
+  payload: item,
+});
+
+export const requestCities = (token) => ({
+  type: REQUEST_CITIES,
+  payload: {
+    request:{
+      url:`/geo/countries/`,
+      method: 'get',
+      headers: {
+        'Authorization': `Token ${token}`,
+      }
+    },
+    options: {
+      onSuccess({ getState, dispatch, response }) {
+        dispatch({ type: RECEIVE_CITIES, payload: response.data.results });
+      },
+      onError({ getState, dispatch }) {     
+        dispatch({ type: OPEN_NOTIFICATION_ERROR, payload: 'This is error network! You can\'t get cities.' });
+     }, 
+    },
+  }
+});

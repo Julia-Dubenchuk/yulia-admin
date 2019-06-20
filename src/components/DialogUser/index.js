@@ -9,7 +9,7 @@ import Slide from '@material-ui/core/Slide';
 import UserForm from '../UserForm';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { isOpen, queryGetProfilesId } from '../../redux/actions';
+import { isOpen, requestProfilesId, requestCities } from '../../redux/actions';
 import history from '../../history';
 import PageNotFound from '../PageNotFound';
 
@@ -28,16 +28,17 @@ const DialogUser = ({ userId }) => {
   const classes = useStyles();
   const open = useSelector(store => store.isOpen);
   const isError = useSelector(store => store.profile.isError);
+  const profile = useSelector(store => store.profile.items);
   const dispatch = useDispatch();
   function handleClose() {
     dispatch(isOpen(false));
     history.push('/data-table');
-
   };
 
   useEffect(() => {
     dispatch(isOpen(true));
-    dispatch(queryGetProfilesId(userId));
+    dispatch(requestProfilesId(userId));
+    dispatch(requestCities(JSON.parse(localStorage.getItem('auth'))));
   }, []);
 
   if(isError) {

@@ -2,19 +2,11 @@ import React, { useEffect } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, reduxForm } from 'redux-form';
-import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import { green } from '@material-ui/core/colors';
 import { queryUpdateProfiles } from '../../redux/actions';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Avatar from '@material-ui/core/Avatar';
 import Loader from '../Loader';
-import { updateProfilesClose } from '../../redux/actions';
+import SnackbarNotification from '../SnackbarNotification';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -74,67 +66,9 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-  const variantIcon = {
-    success: CheckCircleIcon,
-    error: ErrorIcon,
-
-  };
-
-  const useStyles1 = makeStyles(theme => ({
-    success: {
-      backgroundColor: green[600],
-    },
-    error: {
-      backgroundColor: theme.palette.error.dark,
-    },
-    icon: {
-      fontSize: 20,
-    },
-    iconVariant: {
-      opacity: 0.9,
-      marginRight: theme.spacing(1),
-    },
-    message: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-  }));
-
-  function MySnackbarContentWrapper(props) {
-    const classes = useStyles1();
-    const { className, message, onClose, variant, ...other } = props;
-    const Icon = variantIcon[variant];
-    return (
-      <SnackbarContent
-        className={clsx(classes[variant], className)}
-        aria-describedby="client-snackbar"
-        message={
-          <span id="client-snackbar" className={classes.message}>
-            <Icon className={clsx(classes.icon, classes.iconVariant)} />
-            {message}
-          </span>
-        }
-        action={[
-          <IconButton key="close" aria-label="Close" color="inherit" onClick={onClose}>
-            <CloseIcon className={classes.icon} />
-          </IconButton>,
-        ]}
-        {...other}
-      />
-    );
-  }
-
 let UserForm = ({ handleSubmit, initialValues }) => {
     const classes = useStyles();
-    const profile = useSelector(state => state.profile);
     const cities = useSelector(state => state.cities);
-    const dispatch = useDispatch();
-    function handleClose(event, reason) {
-        dispatch(updateProfilesClose());
-      }
-      useEffect(() => {
-       
-      }, []);
       if(!initialValues) {
         return <Loader />
       }
@@ -148,7 +82,7 @@ let UserForm = ({ handleSubmit, initialValues }) => {
                         <label className={classes.labelFont}>First Name</label>
                         <Field
                             disabled
-                            name="user.first_name"
+                            name={initialValues.user.first_name}
                             component="input"
                             label="First Name"
                             className={classes.inputUser}  
@@ -234,21 +168,7 @@ let UserForm = ({ handleSubmit, initialValues }) => {
                         </Button>
                     </div>
                 </form>
-                <Snackbar
-                    anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                    }}
-                    open={profile.open}
-                    autoHideDuration={1000}
-                    onClose={handleClose}
-                >
-                    <MySnackbarContentWrapper
-                        onClose={handleClose}
-                        variant={profile.variant}
-                        message={profile.message}
-                    />
-                </Snackbar>
+                <SnackbarNotification />
             </>
         );
 };  
