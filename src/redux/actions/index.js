@@ -133,44 +133,51 @@ export const updateProfiles = (item) => ({
 //   type: UPDATE_PROFILES_CLOSE,
 // });
 
-// export function updateProfile(formData) {
-//   return {
-//   type: UPDATE_PROFILE,
-//   body: formData,
-//   payload: {
-//     request:{
-//       url:`/vcprofiles/${formData.id}/`,
-//       method: 'patch',
-//       headers: {
-//         'Authorization': `Token ${localToken}`,
-//       }
-//     },
-//     options: {
-//       onSuccess({ getState, dispatch, response }) {
-//         console.log('updateNew', response);
-//         dispatch({type: UPDATE_PROFILE_SUCCESS, payload: response.data});
-//         dispatch({type: OPEN_NOTIFICATION_SUCCESS, message: 'This is success update!'});
-//       },
-//       onError({ getState, dispatch }) {     
-//         dispatch({type: OPEN_NOTIFICATION_ERROR, message: 'This is error update!'});
-//      }, 
-//     },
-//   }}
-// };
+export const updateProfile = (formData, id) => {
+  console.log('update formData', formData);
+  return (dispatch) => {
+    // localStorage.getItem('auth').then(response => {
+      // console.log('LocalStorage', response);
+      dispatch({
+        type: UPDATE_PROFILE,
+        body: formData,
+        payload: {
+          request:{
+            url:`/vcprofiles/${id}/`,
+            method: 'patch',
+            headers: {
+              'Authorization': `Token ${localToken}`,
+            }
+          },
+          options: {
+            onSuccess({ getState, dispatch, response }) {
+              console.log('updateNew', response);
+              dispatch({type: UPDATE_PROFILE_SUCCESS, payload: response.data});
+              dispatch({type: OPEN_NOTIFICATION_SUCCESS, message: 'This is success update!'});
+            },
+            onError({ getState, dispatch }) {     
+              dispatch({type: OPEN_NOTIFICATION_ERROR, message: 'This is error update!'});
+            }, 
+          },
+        }   
+      // })
+    });
+  }
+};
 
-export function queryUpdateProfiles(formData, dispatch) {
-  const localToken = JSON.parse(localStorage.getItem('auth'));
-  let data = new FormData();
-  Object.keys(formData).forEach((key) => {
-    data.set(key, formData[key])
-  });
-  axios.patch(`${API}/vcprofiles/${formData.id}/`, data, { headers: { 'Authorization': `Token ${localToken}` } })
-    .then((res) => {
-      dispatch(updateProfiles(res.data));
-      dispatch({type: OPEN_NOTIFICATION_SUCCESS, message: 'This is success update!'});
-    })
-    .catch(() => dispatch({type: OPEN_NOTIFICATION_ERROR, message: 'This is error update!'}));
-}
+// export function queryUpdateProfiles(formData, dispatch) {
+//   const localToken = JSON.parse(localStorage.getItem('auth'));
+//   let data = new FormData();
+//   Object.keys(formData).forEach((key) => {
+//     data.set(key, formData[key])
+//   });
+//   axios.patch(`${API}/vcprofiles/${formData.id}/`, data, { headers: { 'Authorization': `Token ${localToken}` } })
+//     .then((res) => {
+//       dispatch(updateProfiles(res.data));
+//       dispatch({type: OPEN_NOTIFICATION_SUCCESS, message: 'This is success update!'});
+//     })
+//     .catch(() => dispatch({type: OPEN_NOTIFICATION_ERROR, message: 'This is error update!'}));
+// }
 
 export const isOpen = (item) => ({
   type: OPEN,

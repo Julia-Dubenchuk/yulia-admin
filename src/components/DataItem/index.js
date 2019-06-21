@@ -5,13 +5,14 @@ import Button from '@material-ui/core/Button';
 import Edit from '@material-ui/icons/Edit';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
-import { getUserId } from '../../redux/actions';
+import { getUserId, requestProfilesId } from '../../redux/actions';
 import history from '../../history';
 
 const DataItem = ({ data }) => {
   const dispatch = useDispatch();
   const handleClickOpen = (id) => {
     dispatch(getUserId(id));
+    dispatch(requestProfilesId(id));
     history.push(`/data-table/${id}`);
   };
     return (

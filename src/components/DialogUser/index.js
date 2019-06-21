@@ -62,7 +62,9 @@ const DialogUser = ({ userId }) => {
               </Typography>
             </Toolbar>
           </AppBar>
-          <UserForm />
+          {
+            profile && <UserForm />
+          }
         </Dialog>
     )
 };
