@@ -1,8 +1,6 @@
 import { 
     REQUEST_PROFILES, 
-    RECEIVE_PROFILES,
-    RECEIVE_PROFILES_CLOSE, 
-    RECEIVE_PROFILES_ERROR } from '../../constants';
+    RECEIVE_PROFILES } from '../../constants';
 
 const initialState = {
     isLoader: false,
@@ -20,21 +18,6 @@ export default (state = initialState, { type, payload }) => {
             return {
                 isLoader: false,
                 items: payload,
-            };
-        case RECEIVE_PROFILES_CLOSE:
-            return {
-                ...state,
-                isLoader: true,
-                // open: false,
-                // variant: 'error',
-                // message: 'This is error network! You can\'t get profiles.', 
-            };
-        case RECEIVE_PROFILES_ERROR:
-            return {
-                ...state,
-                // open: true,
-                // variant: 'error',
-                // message: 'This is error network! You can\'t get profiles.', 
             };
         default:
             return state;

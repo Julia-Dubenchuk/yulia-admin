@@ -1,4 +1,8 @@
-import { OPEN_NOTIFICATION_SUCCESS, OPEN_NOTIFICATION_ERROR, CLOSE_NOTIFICATION } from '../../constants';
+import { 
+    OPEN_NOTIFICATION_SUCCESS, 
+    OPEN_NOTIFICATION_ERROR, 
+    CLOSE_NOTIFICATION 
+} from '../../constants';
 
 const initialState = {
     open: false,

@@ -5,7 +5,7 @@ import axiosMiddleware from 'redux-axios-middleware';
 import reducer from './reducers';
 import thunk from 'redux-thunk';
 import history from '../history';
-import { AUTH_SIGN_IN } from '../constants';
+import { AUTH_SIGN_IN_SUCCESS } from '../constants';
 const client = axios.create({
   baseURL: 'https://test-bo.cosmocareportal.com/api/v1',
   responseType: 'json',
@@ -26,7 +26,7 @@ const composeEnhancers =
 
 const store = createStore(reducer(history), enhancer);
 
-store.dispatch({ type: AUTH_SIGN_IN, payload: localStorage.getItem('auth') });
+store.dispatch({ type: AUTH_SIGN_IN_SUCCESS, payload: localStorage.getItem('auth') });
 
 
 export default store;

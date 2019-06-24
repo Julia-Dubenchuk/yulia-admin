@@ -5,13 +5,13 @@ import Button from '@material-ui/core/Button';
 import Edit from '@material-ui/icons/Edit';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
-import { getUserId } from '../../redux/actions';
+import { requestProfilesId } from '../../redux/actions';
 import history from '../../history';
 
 const DataItem = ({ data }) => {
   const dispatch = useDispatch();
   const handleClickOpen = (id) => {
-    dispatch(getUserId(id));
+    dispatch(requestProfilesId(id));
     history.push(`/data-table/${id}`);
   };
     return (
@@ -21,10 +21,10 @@ const DataItem = ({ data }) => {
         </TableCell>
         <TableCell align="right">{data.user.last_name}</TableCell>
         <TableCell align="right">{data.user.second_last_name}</TableCell>
-        <TableCell align="right">{moment(data.user.date_joined).format('MMMM Do YYYY, h:mm:ss a')}</TableCell>
+        <TableCell align="right">{moment(data.user.date_joined).format('LLL')}</TableCell>
         <TableCell align="right">{data.age}</TableCell>
         <TableCell align="right">{data.city}</TableCell>
-        <TableCell align="right">{moment(data.birthday).subtract(10, 'days').calendar()}</TableCell>
+        <TableCell align="right">{moment(data.birthday).format('DD/MM/YYYY')}</TableCell>
         <TableCell align="right">{data.gender}</TableCell>
         <TableCell align="right">
           <Button variant="outlined" color="primary" onClick={() => handleClickOpen(data.id)}>

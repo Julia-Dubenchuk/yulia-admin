@@ -1,8 +1,7 @@
 import { 
     UPDATE_PROFILE,
     UPDATE_PROFILE_SUCCESS, 
-    UPDATE_PROFILE_ERROR, 
-    UPDATE_PROFILE_CLOSE,
+    UPDATE_PROFILE_ERROR,
     REQUEST_PROFILES_ID, 
     RECEIVE_PROFILES_ID,
     RECEIVE_PROFILES_ID_ERROR,
@@ -39,12 +38,7 @@ export default (state = initialState, { type, payload }) => {
         case UPDATE_PROFILE_ERROR:
             return {
                 ...state,
-            }
-        case UPDATE_PROFILE_CLOSE:
-            return {
-                ...state,
-                open: false,
-            }
+            };
         case REQUEST_PROFILES_ID:
             return {
                 ...state,
@@ -52,6 +46,8 @@ export default (state = initialState, { type, payload }) => {
             };
         case RECEIVE_PROFILES_ID:
             return {
+                ...state,
+                isLoader: false,
                 items: {
                     id: payload.id,
                     account_type: payload.account_type,
