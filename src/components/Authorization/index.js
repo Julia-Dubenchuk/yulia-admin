@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import SnackbarNotification from '../SnackbarNotification';
-import { authAdmin, getToken } from '../../redux/actions';
+import { authAccount } from '../../redux/actions';
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -54,10 +54,11 @@ const useStyles = makeStyles(theme => ({
   );
 
 let Authorization = (props) => {
-  console.log('HS', props.handleSubmit);
   const classes = useStyles();
   const dispatch = useDispatch();
-  // console.log('qwe', dispatch(authAdmin));
+  function handleSubmitVal(values) {
+    dispatch(authAccount(values));
+}
     return (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -65,7 +66,7 @@ let Authorization = (props) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} onSubmit={ props.handleSubmit } >
+        <form className={classes.form} onSubmit={ props.handleSubmit(handleSubmitVal) } >
           <Field
             variant="outlined"
             margin="normal"
@@ -103,7 +104,6 @@ let Authorization = (props) => {
 
 Authorization = reduxForm({
     form: 'authorizationForm',
-    onSubmit: getToken,
 })(Authorization);
 
 export default Authorization;

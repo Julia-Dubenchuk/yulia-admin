@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isOpen, requestProfilesId, requestCities } from '../../redux/actions';
 import history from '../../history';
 import PageNotFound from '../PageNotFound';
+import Loader from '../Loader';
 
   const useStyles = makeStyles(() => ({
     appBar: {
@@ -28,7 +29,7 @@ const DialogUser = ({ userId }) => {
   const classes = useStyles();
   const open = useSelector(store => store.isOpen);
   const isError = useSelector(store => store.profile.isError);
-  const profile = useSelector(store => store.profile.items);
+  const isLoader = useSelector(store => store.profile.isLoader);
   const dispatch = useDispatch();
   function handleClose() {
     dispatch(isOpen(false));
@@ -63,7 +64,7 @@ const DialogUser = ({ userId }) => {
             </Toolbar>
           </AppBar>
           {
-            profile && <UserForm />
+            isLoader ? <Loader /> : <UserForm />
           }
         </Dialog>
     )
